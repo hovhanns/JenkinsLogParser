@@ -8,6 +8,16 @@ def read_file_line_by_line(filepath):
         lines = f.readlines()
         return lines
 
+def remove_duplicates_from_dict_list(list_of_dicts):
+    seen = set()
+    new_l = []
+    for d in list_of_dicts:
+        t = tuple(d.items())
+        if t not in seen:
+            seen.add(t)
+            new_l.append(d)
+    return new_l
+
 class JenkinsLogParser:
 
     def __init__(self, filepath):
@@ -60,15 +70,6 @@ class JenkinsLogParser:
                 return result.group(1)
         return None
     
-def remove_duplicates_from_dict_list(list_of_dicts):
-    seen = set()
-    new_l = []
-    for d in list_of_dicts:
-        t = tuple(d.items())
-        if t not in seen:
-            seen.add(t)
-            new_l.append(d)
-    return new_l
 
 log_file = sys.argv[1]
 
@@ -83,15 +84,3 @@ for f in failed:
 
 print(real_fail)
 print(remove_duplicates_from_dict_list(real_fail))
-
-# real_fail = []
-
-# for f in failed:
-#     if f not in passed:
-#         real_fail.append(f)
-
-# print(real_fail)
-
-
-
-
