@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import re
 import sys
 
@@ -26,7 +26,7 @@ class JenkinsLogParser:
         self.lines = read_file_line_by_line(self.filepath)
         self.failed_tc = []
         self.passed_tc = []
-    
+
     def get_tc(self, failed=True, include_suite=False):
         pattern = ""
         if failed:
@@ -82,5 +82,8 @@ for f in failed:
     if f not in passed:
         real_fail.append(f)
 
-print(real_fail)
-print(remove_duplicates_from_dict_list(real_fail))
+#print(real_fail)
+ll = remove_duplicates_from_dict_list(real_fail)
+
+for l in ll:
+    print(l)
