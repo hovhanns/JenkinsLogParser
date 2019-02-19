@@ -8,6 +8,7 @@ def read_file_line_by_line(filepath):
         lines = f.readlines()
         return lines
 
+
 def remove_duplicates_from_dict_list(list_of_dicts):
     seen = set()
     new_l = []
@@ -18,11 +19,12 @@ def remove_duplicates_from_dict_list(list_of_dicts):
             new_l.append(d)
     return new_l
 
+
 class JenkinsLogParser:
 
     def __init__(self, filepath):
         print("Jenkins LP init!")
-        self.filepath = filepath    
+        self.filepath = filepath
         self.lines = read_file_line_by_line(self.filepath)
         self.failed_tc = []
         self.passed_tc = []
@@ -57,11 +59,11 @@ class JenkinsLogParser:
                 failed_tc = re.sub('[^a-zA-Z +]', '', s)
                 if include_suite:
                     suite = self.get_suite(i)
-                    tcs.append({suite:failed_tc})
+                    tcs.append({suite: failed_tc})
                 else:
                     tcs.append(failed_tc)
         return tcs
-    
+
     def get_suite(self, line_number):
         pattern = "wavefront (.*) suite"
         for i in range(line_number, 0, -1):
@@ -69,7 +71,7 @@ class JenkinsLogParser:
             if result is not None:
                 return result.group(1)
         return None
-    
+
 
 log_file = sys.argv[1]
 
@@ -82,7 +84,7 @@ for f in failed:
     if f not in passed:
         real_fail.append(f)
 
-#print(real_fail)
+# print(real_fail)
 ll = remove_duplicates_from_dict_list(real_fail)
 
 for l in ll:
