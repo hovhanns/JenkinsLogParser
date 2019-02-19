@@ -1,2 +1,3 @@
 con*
 .idea/*
+__pycache__/*
