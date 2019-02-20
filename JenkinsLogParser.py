@@ -28,7 +28,7 @@ class JenkinsLogParser:
                 self.passed_tc = self.get_tc_helper(pattern, include_suite)
                 return self.passed_tc
 
-    def get_tc_helper(self, pattern, include_suite=False):
+    def get_tc_helper(self, pattern, detailed=False):
         tcs = []
         for i, line in enumerate(self.lines):
             result = re.search(pattern, line)
@@ -37,9 +37,10 @@ class JenkinsLogParser:
                 # s = s.replace("\t", "")
                 # s = s.replace("  ", "")
                 testCase = re.sub('[^a-zA-Z +]', '', s)
-                if include_suite:
+                if detailed:
                     suite = self.get_suite(i)
-                    tcs.append({"suite": suite, "testCase": testCase})
+                    reason = self.get_reason(i)
+                    tcs.append({"suite": suite, "testCase": testCase, "reason": reason})
                 else:
                     tcs.append({"testCase": testCase})
         return tcs
@@ -50,4 +51,11 @@ class JenkinsLogParser:
             result = re.search(pattern, self.lines[i])
             if result is not None:
                 return result.group(1)
+        return None
+
+    def get_reason(self, line_number):
+        pattern = '(Failed: |Expected )(.*)'
+        result = re.search(pattern, self.lines[line_number + 1])
+        if result is not None:
+            return result.group(2).replace("\x1b", "")
         return None
