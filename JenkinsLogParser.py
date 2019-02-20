@@ -10,14 +10,14 @@ class JenkinsLogParser:
         self.failed_tc = []
         self.passed_tc = []
 
-    def get_tc(self, failed=True, include_suite=False):
+    def get_tc(self, failed=True, detailed=False):
         if failed:
             if len(self.failed_tc) > 0:
                 print("List for failed TCs is already inited")
                 return self.failed_tc
             else:
                 pattern = "✗ (.*)\["
-                self.failed_tc = self.get_tc_helper(pattern, include_suite)
+                self.failed_tc = self.get_tc_helper(pattern, detailed)
                 return self.failed_tc
         else:
             if len(self.passed_tc) > 0:
@@ -25,7 +25,7 @@ class JenkinsLogParser:
                 return self.passed_tc
             else:
                 pattern = "✓ (.*)\["
-                self.passed_tc = self.get_tc_helper(pattern, include_suite)
+                self.passed_tc = self.get_tc_helper(pattern, detailed)
                 return self.passed_tc
 
     def get_tc_helper(self, pattern, detailed=False):
@@ -54,7 +54,7 @@ class JenkinsLogParser:
         return None
 
     def get_reason(self, line_number):
-        pattern = '(Failed: |Expected )(.*)'
+        pattern = '(Failed: |Expected |Error: )(.*)'
         result = re.search(pattern, self.lines[line_number + 1])
         if result is not None:
             return result.group(2).replace("\x1b", "")
