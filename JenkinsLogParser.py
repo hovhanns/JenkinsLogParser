@@ -36,12 +36,12 @@ class JenkinsLogParser:
                 s = result.group(1)
                 # s = s.replace("\t", "")
                 # s = s.replace("  ", "")
-                failed_tc = re.sub('[^a-zA-Z +]', '', s)
+                testCase = re.sub('[^a-zA-Z +]', '', s)
                 if include_suite:
                     suite = self.get_suite(i)
-                    tcs.append({suite: failed_tc})
+                    tcs.append({"suite": suite, "testCase": testCase})
                 else:
-                    tcs.append(failed_tc)
+                    tcs.append({"testCase": testCase})
         return tcs
 
     def get_suite(self, line_number):
