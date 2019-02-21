@@ -7,8 +7,8 @@ class JenkinsLogParser:
     def __init__(self, filepath):
         self.filepath = filepath
         self.lines = read_file_line_by_line(self.filepath)
-        self.failed_tc = []
-        self.passed_tc = []
+        self.failed_tc = {}
+        self.passed_tc = {}
 
     def get_tc(self, failed=True, detailed=False):
         if failed:
@@ -29,20 +29,22 @@ class JenkinsLogParser:
                 return self.passed_tc
 
     def get_tc_helper(self, pattern, detailed=False):
-        tcs = []
+        tcs = {"suite": [], "testCase": [], "reason": []}
         for i, line in enumerate(self.lines):
             result = re.search(pattern, line)
             if result is not None:
                 s = result.group(1)
                 # s = s.replace("\t", "")
                 # s = s.replace("  ", "")
-                testCase = re.sub('[^a-zA-Z +]', '', s)
+                test_case = re.sub('[^a-zA-Z +]', '', s)
                 if detailed:
                     suite = self.get_suite(i)
                     reason = self.get_reason(i)
-                    tcs.append({"suite": suite, "testCase": testCase, "reason": reason})
+                    tcs['suite'].append(suite)
+                    tcs['testCase'].append(test_case)
+                    tcs['reason'].append(reason)
                 else:
-                    tcs.append({"testCase": testCase})
+                    tcs['testCase'].append(test_case)
         return tcs
 
     def get_suite(self, line_number):
